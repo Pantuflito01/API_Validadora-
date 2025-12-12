@@ -1,53 +1,53 @@
 #!/bin/bash
 
-# QUICK START - API Validadora de Datos Personales
-# ================================================
+# QUICK START - Personal Data Validator API
+# ========================================
 
 echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║       API VALIDADORA - INSTRUCCIONES RÁPIDAS (QUICK START)     ║"
+echo "║          PERSONAL DATA VALIDATOR - QUICK START INSTRUCTIONS     ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
-echo "📂 Ubicación del proyecto:"
+echo "Project directory:"
 echo "   /home/pantuflitos/Proyectos/API_Validadora"
 echo ""
 
-echo "🚀 PASO 1: Acceder al directorio"
+echo "STEP 1: Change to project directory"
 echo "   cd /home/pantuflitos/Proyectos/API_Validadora"
 echo ""
 
-echo "⚙️  PASO 2: Activar el entorno virtual (si lo necesitas)"
+echo "STEP 2: Activate virtual environment (if needed)"
 echo "   source .venv/bin/activate"
 echo ""
 
-echo "▶️  PASO 3: Iniciar la API"
+echo "STEP 3: Start the API"
 echo "   python -m uvicorn main:app --host localhost --port 8000"
 echo ""
 
-echo "🌐 PASO 4: Acceder a la API"
+echo "STEP 4: Access the API"
 echo "   Swagger UI: http://localhost:8000/docs"
 echo "   ReDoc: http://localhost:8000/redoc"
 echo "   Health: http://localhost:8000/health"
 echo ""
 
-echo "📝 PASO 5: Ejemplo de petición con cURL"
-echo '   curl -X POST http://localhost:8000/validar \'
+echo "Example request with cURL:"
+echo '   curl -X POST http://localhost:8000/validate \'
 echo '     -H "Content-Type: application/json" \'
 echo '     -d '\''{
-echo '       "nombre": "juan",
-echo '       "apellido": "perez",
+echo '       "first_name": "juan",
+echo '       "last_name": "perez",
 echo '       "email": "juan@example.com"
 echo '     }'\'''
 echo ""
 
-echo "🧪 PASO 6: Ejecutar pruebas (en otra terminal)"
+echo "Run tests (in another terminal):"
 echo "   python test_api.py"
 echo ""
 
 echo "════════════════════════════════════════════════════════════════"
 echo ""
-echo "📖 Documentación completa en: README.md"
-echo "💡 Ejemplos adicionales en: EJEMPLOS.md"
+echo "Full documentation: README.md"
+echo "More examples: EJEMPLOS.md"
 echo ""
-echo "✅ La API está 100% funcional y lista para usar."
+echo "✅ The API is ready to use."
 echo ""

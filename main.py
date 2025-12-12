@@ -91,7 +91,6 @@ async def health_check() -> Dict[str, str]:
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 
-@app.post("/validar", tags=["Validación"])
 @app.post("/validate", tags=["Validation"])
 async def validate_user(usuario: UsuarioValidation) -> Dict[str, Any]:
     """Validate a user's personal data.

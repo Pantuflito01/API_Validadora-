@@ -14,11 +14,11 @@ curl http://localhost:8000/
 
 ### 3. Validación exitosa con todos los campos
 ```bash
-curl -X POST http://localhost:8000/validar \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "juan",
-    "apellido": "perez",
+    "first_name": "juan",
+    "last_name": "perez",
+    "email": "juan.perez@example.com",
+    "phone": "1234567890",
+    "age": 30
     "email": "juan.perez@example.com",
     "telefono": "1234567890",
     "edad": 30
@@ -29,9 +29,9 @@ curl -X POST http://localhost:8000/validar \
 ```bash
 curl -X POST http://localhost:8000/validar \
   -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "maria",
-    "apellido": "garcia",
+    "first_name": "maria",
+    "last_name": "garcia",
+    "email": "maria.garcia@example.com"
     "email": "maria.garcia@example.com"
   }'
 ```
@@ -42,9 +42,9 @@ curl -X POST http://localhost:8000/validar \
   -H "Content-Type: application/json" \
   -d '{
     "nombre": "carlos",
-    "apellido": "lopez",
-    "email": "email-invalido"
-  }'
+    "first_name": "carlos",
+    "last_name": "lopez",
+    "email": "invalid-email"
 ```
 
 ### 6. Guardando respuesta en archivo
@@ -55,9 +55,9 @@ curl -X POST http://localhost:8000/validar \
     "nombre": "ana",
     "apellido": "martinez",
     "email": "ana@example.com"
-  }' > respuesta.json
-```
-
+    "first_name": "ana",
+    "last_name": "martinez",
+    "email": "ana@example.com"
 ### 7. Con formato JSON pretty-printed
 ```bash
 curl -X POST http://localhost:8000/validar \
@@ -69,10 +69,10 @@ curl -X POST http://localhost:8000/validar \
     "edad": 25
   }' | python -m json.tool
 ```
-
----
-
-## 🐍 Ejemplos con Python
+    "first_name": "luis",
+    "last_name": "rodriguez",
+    "email": "luis@example.com",
+    "age": 25
 
 ### 1. Uso básico con requests
 ```python
@@ -88,11 +88,11 @@ datos = {
     "edad": 30
 }
 
-respuesta = requests.post(url, json=datos)
-print(json.dumps(respuesta.json(), indent=2))
-```
-
-### 2. Manejo de errores
+    "first_name": "juan",
+    "last_name": "perez",
+    "email": "juan.perez@example.com",
+    "phone": "1234567890",
+    "age": 30
 ```python
 import requests
 
@@ -104,9 +104,9 @@ datos = {
 }
 
 respuesta = requests.post(url, json=datos)
-
-if respuesta.status_code == 200:
-    print("✓ Validación exitosa")
+    "first_name": "a",  # Too short
+    "last_name": "perez",
+    "email": "juan.perez@example.com"
     print(respuesta.json())
 elif respuesta.status_code == 422:
     print("✗ Error de validación")
@@ -133,11 +133,11 @@ usuarios = [
         "apellido": "garcia",
         "email": "maria@example.com",
         "edad": 25
-    },
-    {
-        "nombre": "carlos",
-        "apellido": "lopez",
-        "email": "carlos@example.com"
+        "first_name": "juan",
+        "last_name": "perez",
+        "email": "juan@example.com",
+        "phone": "1234567890",
+        "age": 30
     }
 ]
 
@@ -165,9 +165,9 @@ def crear_sesion_con_reintentos():
     reintentos = Retry(
         total=3,
         backoff_factor=0.1,
-        status_forcelist=[500, 502, 503, 504]
-    )
-    adaptador = HTTPAdapter(max_retries=reintentos)
+    "first_name": "juan",
+    "last_name": "perez",
+    "email": "juan@example.com"
     s.mount('http://', adaptador)
     s.mount('https://', adaptador)
     return s
@@ -192,9 +192,9 @@ import json
 
 async def validar_usuario():
     async with httpx.AsyncClient() as client:
-        datos = {
-            "nombre": "juan",
-            "apellido": "perez",
+            "first_name": "juan",
+            "last_name": "perez",
+            "email": "juan@example.com"
             "email": "juan@example.com"
         }
         
@@ -216,9 +216,9 @@ asyncio.run(validar_usuario())
 ```python
 import pytest
 from fastapi.testclient import TestClient
-from main import app
-
-client = TestClient(app)
+            "first_name": "juan",
+            "last_name": "perez",
+            "email": "juan@example.com"
 
 def test_validacion_exitosa():
     """Prueba que una validación exitosa devuelve 200"""
@@ -247,9 +247,9 @@ def test_email_invalido():
 
 def test_nombre_muy_corto():
     """Prueba que nombres cortos devuelven 422"""
-    respuesta = client.post(
-        "/validar",
-        json={
+    "first_name": "juan",
+    "last_name": "perez",
+    "email": "juan@example.com"
             "nombre": "a",
             "apellido": "perez",
             "email": "test@example.com"
@@ -274,9 +274,9 @@ def test_normalizacion_nombres():
 
 # Ejecutar con: pytest
 ```
-
----
-
+            "first_name": "juan",
+            "last_name": "perez",
+            "email": "juan@example.com"
 ## 📡 Ejemplo con JavaScript/Fetch
 
 ```javascript

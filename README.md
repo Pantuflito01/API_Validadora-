@@ -1,4 +1,4 @@
-# API Validadora
+# Personal Data Validator API
 
 FastAPI REST API for validating personal data using Pydantic.
 
@@ -35,28 +35,28 @@ uvicorn main:app --host localhost --port 8000
 Endpoints
 - `GET /` — API information and metadata
 - `GET /health` — Health check
-- `POST /validar` — Validate personal data (JSON body)
+ - `POST /validate` — Validate personal data (JSON body)
 
 Example Request
 
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
-  -d '{"nombre":"juan","apellido":"perez","email":"juan@example.com","telefono":"1234567","edad":30}'
+  -d '{"first_name":"juan","last_name":"perez","email":"juan@example.com","phone":"1234567","age":30}'
 ```
 
 Example Response
 
 ```json
 {
-  "valido": true,
-  "mensaje": "Datos validados correctamente",
-  "datos": {
-    "nombre": "Juan",
-    "apellido": "Perez",
+  "valid": true,
+  "message": "Data validated successfully",
+  "data": {
+    "first_name": "Juan",
+    "last_name": "Perez",
     "email": "juan@example.com",
-    "telefono": "1234567",
-    "edad": 30
+    "phone": "1234567",
+    "age": 30
   },
   "timestamp": "2025-12-11T22:56:11.327998"
 }
@@ -144,10 +144,10 @@ Example response (200):
 
 ```json
 {
-  "nombre": "API Validadora",
+  "name": "Personal Data Validator API",
   "version": "1.0.0",
-  "descripcion": "Personal data validation REST API",
-  "documentacion": "http://localhost:8000/docs",
+  "description": "Personal data validation REST API",
+  "documentation": "http://localhost:8000/docs",
   "timestamp": "2025-12-11T22:50:31.132924"
 }
 ```
@@ -163,27 +163,27 @@ Example response (200):
 }
 ```
 
-3) `POST /validar` — Validate personal data
+3) `POST /validate` — Validate personal data
 
 Request schema (JSON):
 
-- `nombre` (string, required): minimum 2 characters
-- `apellido` (string, required): minimum 2 characters
+- `first_name` (string, required): minimum 2 characters
+- `last_name` (string, required): minimum 2 characters
 - `email` (string, required): valid email format
-- `telefono` (string, optional): digits only, minimum 7 digits
-- `edad` (integer, optional): 0-120
+- `phone` (string, optional): digits only, minimum 7 digits
+- `age` (integer, optional): 0-120
 
 Example request:
 
 ```bash
-curl -X POST http://localhost:8000/validar \
+curl -X POST http://localhost:8000/validate \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "juan",
-    "apellido": "perez",
+    "first_name": "juan",
+    "last_name": "perez",
     "email": "juan.perez@example.com",
-    "telefono": "1234567",
-    "edad": 30
+    "phone": "1234567",
+    "age": 30
   }'
 ```
 
@@ -191,14 +191,14 @@ Successful response (200):
 
 ```json
 {
-  "valido": true,
-  "mensaje": "Datos validados correctamente",
-  "datos": {
-    "nombre": "Juan",
-    "apellido": "Perez",
+  "valid": true,
+  "message": "Data validated successfully",
+  "data": {
+    "first_name": "Juan",
+    "last_name": "Perez",
     "email": "juan.perez@example.com",
-    "telefono": "1234567",
-    "edad": 30
+    "phone": "1234567",
+    "age": 30
   },
   "timestamp": "2025-12-11T22:50:31.141245"
 }
@@ -207,11 +207,11 @@ Successful response (200):
 Validation error example (422):
 
 ```bash
-curl -X POST http://localhost:8000/validar \
+curl -X POST http://localhost:8000/validate \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "a",
-    "apellido": "perez",
+    "first_name": "a",
+    "last_name": "perez",
     "email": "invalid-email"
   }'
 ```
@@ -235,22 +235,22 @@ This project is licensed under the MIT License — see the `LICENSE` file for de
 Contributions are welcome. Please open an issue or a pull request on GitHub.
 
 
-**Respuesta con error (422):**
+**Error response (422):**
 
 ```json
 {
   "detail": [
     {
       "type": "value_error",
-      "loc": ["body", "nombre"],
-      "msg": "Value error, Debe tener mínimo 2 caracteres",
+      "loc": ["body", "first_name"],
+      "msg": "Value error, Must have at least 2 characters",
       "input": "a"
     },
     {
       "type": "value_error",
       "loc": ["body", "email"],
       "msg": "value is not a valid email address: The email address is not valid. It must have exactly one @-sign.",
-      "input": "email-inválido"
+      "input": "invalid-email"
     }
   ]
 }
@@ -258,39 +258,39 @@ Contributions are welcome. Please open an issue or a pull request on GitHub.
 
 ---
 
-## 🧪 Pruebas
+## 🧪 Tests
 
-### Ejecutar script de pruebas automatizadas
+### Run automated test script
 
 ```bash
 python test_api.py
 ```
 
-Este script ejecuta 11 pruebas diferentes que incluyen:
+The test script runs 11 tests including:
 
-✅ Endpoint raíz  
-✅ Health check  
-✅ Validación exitosa  
-✅ Validación sin campos opcionales  
-✅ Error: Nombre muy corto  
-✅ Error: Email inválido  
-✅ Error: Teléfono muy corto  
-✅ Error: Teléfono no numérico  
-✅ Error: Edad fuera de rango  
-✅ Error: Campos obligatorios faltantes  
-✅ Normalización de nombres  
+- Root endpoint
+- Health check
+- Successful validation
+- Validation without optional fields
+- Error: First name too short
+- Error: Invalid email
+- Error: Phone too short
+- Error: Phone not numeric
+- Error: Age out of range
+- Error: Missing required fields
+- Name normalization
 
-**Salida esperada:**
+**Expected output:**
 ```
 ============================================================
-PRUEBAS DE LA API VALIDADORA
+PERSONAL DATA VALIDATOR TESTS
 ============================================================
-✓ API disponible en http://localhost:8000
+✓ API available at http://localhost:8000
 ...
-Pruebas exitosas: 11/11
+Passed tests: 11/11
 ============================================================
 
-¡Todas las pruebas pasaron correctamente!
+All tests passed successfully!
 ```
 
 ---
@@ -299,14 +299,14 @@ Pruebas exitosas: 11/11
 
 ```
 API_Validadora/
-├── main.py                 # Aplicación principal (FastAPI)
+├── main.py                 # Main application (FastAPI)
 ├── app/
-│   ├── __init__.py        # Inicializador del paquete
-│   ├── models.py          # Modelos Pydantic con validadores
-│   └── validators.py      # Funciones de validación personalizadas
-├── test_api.py            # Script de pruebas automatizadas
-├── requirements.txt       # Dependencias del proyecto
-└── README.md             # Este archivo
+│   ├── __init__.py        # Package initializer
+│   ├── models.py          # Pydantic models with validators
+│   └── validators.py      # Custom validation functions
+├── test_api.py            # Automated test script
+├── requirements.txt       # Project dependencies
+└── README.md              # This file
 ```
 
 ---
@@ -316,7 +316,7 @@ API_Validadora/
 | Paquete | Versión | Propósito |
 |---------|---------|----------|
 | `fastapi` | 0.104.1 | Framework web moderno |
-| `pydantic` | 2.5.0 | Validación de datos |
+| `pydantic` | 2.5.0 | Data validation |
 | `pydantic-extra-types` | 2.1.0 | Tipos adicionales de Pydantic |
 | `uvicorn[standard]` | 0.24.0 | Servidor ASGI |
 | `email-validator` | 2.1.0 | Validación de emails |
@@ -341,26 +341,26 @@ En Swagger UI puedes:
 
 ## 📊 Validaciones Implementadas
 
-### Nombres y Apellidos
-- ✅ Mínimo 2 caracteres
-- ✅ Se capitalizan automáticamente (primera letra mayúscula, resto minúsculas)
-- ✅ Se eliminan espacios en blanco innecesarios
+### First and Last Names
+- ✅ Minimum 2 characters
+- ✅ Automatically capitalized (first letter uppercase, rest lowercase)
+- ✅ Trims unnecessary whitespace
 
 ### Email
-- ✅ Formato válido según RFC 5322
-- ✅ Validación con librería `email-validator`
-- ✅ Campo obligatorio
+- ✅ Valid format per RFC 5322
+- ✅ Validation with `email-validator` library
+- ✅ Required field
 
-### Teléfono
-- ✅ Solo dígitos (0-9)
-- ✅ Mínimo 7 dígitos
-- ✅ Opcional (puede ser null)
-- ✅ Se eliminan espacios en blanco
+### Phone
+- ✅ Digits only (0-9)
+- ✅ Minimum 7 digits
+- ✅ Optional (can be null)
+- ✅ Trims whitespace
 
-### Edad
-- ✅ Rango 0-120 años
-- ✅ Tipo int (entero)
-- ✅ Opcional (puede ser null)
+### Age
+- ✅ Range 0-120
+- ✅ Integer type
+- ✅ Optional (can be null)
 
 ---
 
@@ -373,11 +373,11 @@ La API registra automáticamente:
 - Resultado de la validación
 - Errores y excepciones
 
-**Ejemplo de logs:**
+**Example logs:**
 ```
-2025-12-11 22:50:31 - main - INFO - API Validadora iniciada correctamente
-2025-12-11 22:50:31 - main - INFO - Petición POST /validar - Email: juan.perez@example.com, Nombre: juan, Apellido: perez
-2025-12-11 22:50:31 - main - INFO - Validación exitosa para: juan.perez@example.com
+2025-12-11 22:50:31 - main - INFO - Personal Data Validator API started
+2025-12-11 22:50:31 - main - INFO - POST /validate - Email: juan.perez@example.com, First: juan, Last: perez
+2025-12-11 22:50:31 - main - INFO - Validation successful for: juan.perez@example.com
 ```
 
 ---
@@ -392,14 +392,14 @@ python -m uvicorn main:app --host localhost --port 8000
 ### 2. Hacer una petición desde otro terminal o usando Postman
 
 ```bash
-curl -X POST http://localhost:8000/validar \
+curl -X POST http://localhost:8000/validate \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "carlos",
-    "apellido": "martinez",
+    "first_name": "carlos",
+    "last_name": "martinez",
     "email": "carlos.martinez@gmail.com",
-    "telefono": "1234567890",
-    "edad": 25
+    "phone": "1234567890",
+    "age": 25
   }' | python -m json.tool
 ```
 
@@ -407,14 +407,14 @@ curl -X POST http://localhost:8000/validar \
 
 ```json
 {
-  "valido": true,
-  "mensaje": "Datos validados correctamente",
-  "datos": {
-    "nombre": "Carlos",
-    "apellido": "Martinez",
+  "valid": true,
+  "message": "Data validated successfully",
+  "data": {
+    "first_name": "Carlos",
+    "last_name": "Martinez",
     "email": "carlos.martinez@gmail.com",
-    "telefono": "1234567890",
-    "edad": 25
+    "phone": "1234567890",
+    "age": 25
   },
   "timestamp": "2025-12-11T22:50:31.141245"
 }
@@ -422,7 +422,7 @@ curl -X POST http://localhost:8000/validar \
 
 ---
 
-## 🛠️ Personalización
+## 🛠️ Customization
 
 ### Cambiar puerto
 ```bash
@@ -492,17 +492,17 @@ Para problemas o preguntas, revisa:
 
 ---
 
-## ✨ Checklist de Implementación
+## ✨ Implementation Checklist
 
 - ✅ API REST funcional con FastAPI
-- ✅ Endpoints POST /validar, GET /, GET /health
+ - ✅ Endpoints POST /validate, GET /, GET /health
 - ✅ Validación con Pydantic
 - ✅ Normalización de nombres
 - ✅ Validación de email con regex
 - ✅ Validación de teléfono (numérico, 7+ dígitos)
 - ✅ Validación de edad (0-120)
-- ✅ Campos obligatorios: nombre, apellido, email
-- ✅ Campos opcionales: teléfono, edad
+ - ✅ Required fields: first_name, last_name, email
+ - ✅ Optional fields: phone, age
 - ✅ Manejo global de errores
 - ✅ Logging por cada petición
 - ✅ Swagger UI automático

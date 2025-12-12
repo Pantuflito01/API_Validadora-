@@ -1,297 +1,131 @@
 """
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                   API VALIDADORA DE DATOS PERSONALES                         ║
-║                          🚀 PROYECTO COMPLETADO                              ║
-╚══════════════════════════════════════════════════════════════════════════════╝
+PERSONAL DATA VALIDATOR API - PROJECT COMPLETE
 
-📅 Fecha: 11 de diciembre de 2025
-✅ Estado: 100% Funcional y Listo para Producción
-🔧 Tecnología: FastAPI + Pydantic + Python 3.12
-📊 Pruebas: 11/11 ✓ (Todas exitosas)
+Date: 11 December 2025
+Status: 100% Functional and Production-Ready
+Stack: FastAPI + Pydantic + Python 3.12
+Tests: 11/11 ✓ (All passing)
 
-═══════════════════════════════════════════════════════════════════════════════
-
-📂 ESTRUCTURA DEL PROYECTO
-═══════════════════════════════════════════════════════════════════════════════
+PROJECT STRUCTURE
+-----------------
 
 API_Validadora/
-│
-├── 📄 main.py                    → Aplicación principal (FastAPI)
-│   └─ Contiene:
-│     • 3 endpoints funcionales (GET /, GET /health, POST /validar)
-│     • Logging de peticiones
-│     • Manejo global de errores
-│     • Documentación con Swagger UI automático
-│
-├── 📁 app/                        → Paquete modular
-│   ├── __init__.py              → Inicializador del paquete
-│   ├── models.py                → Modelos Pydantic con validadores
-│   │   └─ UsuarioValidacion: Modelo principal con validaciones integradas
-│   │
-│   └── validators.py            → Funciones de validación personalizadas
-│       └─ Funciones auxiliares para email, nombres y edades
-│
-├── 🧪 test_api.py                → Script de pruebas automatizadas
-│   └─ 11 casos de prueba incluidos
-│
-├── 📋 requirements.txt            → Dependencias del proyecto
-│   └─ FastAPI, Pydantic, Uvicorn, Email-validator, etc.
-│
-├── 📖 README.md                   → Documentación completa
-│   └─ Instalación, uso, ejemplos, troubleshooting
-│
-├── 📚 EJEMPLOS.md                 → Ejemplos de uso en varios lenguajes
-│   └─ cURL, Python, JavaScript, Test unitarios, Batch processing
-│
-├── 🔒 .gitignore                  → Configuración de Git
-│
-└── ⚙️  .env.example                → Variables de configuración ejemplo
+   - main.py                    → Main FastAPI application
+      • 3 endpoints: GET /, GET /health, POST /validate
+      • Request logging
+      • Global error handling
+      • Auto-generated Swagger UI
 
-═══════════════════════════════════════════════════════════════════════════════
+   - app/                       → Modular package
+      • models.py                 → Pydantic models (main model: UsuarioValidation)
+      • validators.py             → Custom validation helpers
 
-✨ CARACTERÍSTICAS IMPLEMENTADAS
-═══════════════════════════════════════════════════════════════════════════════
+   - test_api.py                → 11 automated test cases
+   - requirements.txt           → Project dependencies
+   - README.md                  → Full documentation (install, usage, examples)
+   - EJEMPLOS.md                → Usage examples (cURL, Python, JS)
+   - .env.example               → Example environment variables
 
-✅ ENDPOINTS
-   • GET /              → Información de la API
-   • GET /health        → Health check
-   • POST /validar      → Validar datos personales
+FEATURES
+--------
 
-✅ VALIDACIONES CON PYDANTIC
-   • Nombre: mínimo 2 caracteres, normalización automática
-   • Apellido: mínimo 2 caracteres, normalización automática
-   • Email: validación con email-validator
-   • Teléfono: numérico, mínimo 7 dígitos (opcional)
-   • Edad: rango 0-120 años (opcional)
+Endpoints:
+   • GET /        → API info
+   • GET /health  → Health check
+   • POST /validate → Validate personal data
 
-✅ CARACTERÍSTICAS PROFESIONALES
-   • Validación de datos robusta con Pydantic v2
-   • Normalización de nombres (capitalización)
-   • Manejo global de errores
-   • Logging automático de peticiones
-   • Swagger UI automático para documentación interactiva
-   • Código modular y escalable
-   • Mensajes de error claros y detallados
+Validations:
+   • First name: min 2 chars, auto-normalized
+   • Last name: min 2 chars, auto-normalized
+   • Email: validated with email-validator
+   • Phone: numeric, min 7 digits (optional)
+   • Age: integer, range 0-120 (optional)
 
-✅ TESTING
-   • 11 pruebas automatizadas incluidas
-   • Pruebas de validación exitosa
-   • Pruebas de errores y casos límite
-   • Pruebas de normalización
+How to use
+----------
 
-═══════════════════════════════════════════════════════════════════════════════
+1) Start the API
+    $ cd /home/pantuflitos/Proyectos/API_Validadora
+    $ python -m uvicorn main:app --host localhost --port 8000
 
-🚀 CÓMO USAR LA API
-═══════════════════════════════════════════════════════════════════════════════
+2) Access docs
+    • Swagger UI: http://localhost:8000/docs
+    • ReDoc: http://localhost:8000/redoc
 
-1️⃣  INICIAR LA API
-    cd /home/pantuflitos/Proyectos/API_Validadora
-    python -m uvicorn main:app --host localhost --port 8000
+3) Example request (cURL)
+    $ curl -X POST http://localhost:8000/validate \
+       -H "Content-Type: application/json" \
+       -d '{"first_name":"juan","last_name":"perez","email":"juan@example.com"}'
 
-2️⃣  ACCEDER A LA DOCUMENTACIÓN
-    🌐 http://localhost:8000/docs (Swagger UI interactivo)
-    📖 http://localhost:8000/redoc (ReDoc)
+4) Run tests
+    $ python test_api.py
 
-3️⃣  HACER PETICIONES
-    Opción A: Con cURL
-    $ curl -X POST http://localhost:8000/validar \
-      -H "Content-Type: application/json" \
-      -d '{
-        "nombre": "juan",
-        "apellido": "perez",
-        "email": "juan@example.com"
-      }'
+Example responses
+-----------------
 
-    Opción B: Con Python
-    >>> import requests
-    >>> datos = {
-    ...     "nombre": "juan",
-    ...     "apellido": "perez",
-    ...     "email": "juan@example.com"
-    ... }
-    >>> r = requests.post("http://localhost:8000/validar", json=datos)
-    >>> print(r.json())
+Successful validation (200):
+{
+   "valid": true,
+   "message": "Data validated successfully",
+   "data": {
+      "first_name": "Juan",
+      "last_name": "Perez",
+      "email": "juan.perez@example.com",
+      "phone": "1234567890",
+      "age": 30
+   },
+   "timestamp": "2025-12-11T22:50:31.141245"
+}
 
-4️⃣  EJECUTAR PRUEBAS
-    python test_api.py
-
-═══════════════════════════════════════════════════════════════════════════════
-
-📊 RESPUESTAS DE EJEMPLO
-═══════════════════════════════════════════════════════════════════════════════
-
-✅ VALIDACIÓN EXITOSA (200)
-   {
-     "valido": true,
-     "mensaje": "Datos validados correctamente",
-     "datos": {
-       "nombre": "Juan",
-       "apellido": "Perez",
-       "email": "juan.perez@example.com",
-       "telefono": "1234567890",
-       "edad": 30
-     },
-     "timestamp": "2025-12-11T22:50:31.141245"
-   }
-
-❌ ERROR DE VALIDACIÓN (422)
-   {
-     "detail": [
-       {
+Validation error (422):
+{
+   "detail": [
+      {
          "type": "value_error",
-         "loc": ["body", "nombre"],
-         "msg": "Value error, Debe tener mínimo 2 caracteres",
+         "loc": ["body", "first_name"],
+         "msg": "Value error, Must have at least 2 characters",
          "input": "a"
-       }
-     ]
-   }
+      }
+   ]
+}
 
-═══════════════════════════════════════════════════════════════════════════════
+Dependencies
+------------
 
-📦 DEPENDENCIAS INSTALADAS
-═══════════════════════════════════════════════════════════════════════════════
+fastapi==0.104.1
+pydantic==2.5.0
+pydantic-extra-types==2.1.0
+uvicorn[standard]==0.24.0
+email-validator==2.1.0
+python-multipart==0.0.6
+requests
 
-fastapi==0.104.1              → Framework web moderno
-pydantic==2.5.0               → Validación de datos
-pydantic-extra-types==2.1.0   → Tipos adicionales
-uvicorn[standard]==0.24.0     → Servidor ASGI
-email-validator==2.1.0        → Validación de emails
-python-multipart==0.0.6       → Parseo de multipart/form-data
-requests                      → Cliente HTTP (para pruebas)
+Tests
+-----
 
-═══════════════════════════════════════════════════════════════════════════════
-
-🧪 RESULTADOS DE PRUEBAS
-═══════════════════════════════════════════════════════════════════════════════
-
-✓ Endpoint raíz
+✓ Root endpoint
 ✓ Health check
-✓ Validación exitosa
-✓ Validación sin campos opcionales
-✓ Error: Nombre muy corto
-✓ Error: Email inválido
-✓ Error: Teléfono muy corto
-✓ Error: Teléfono no numérico
-✓ Error: Edad fuera de rango
-✓ Error: Campos obligatorios faltantes
-✓ Normalización de nombres
+✓ Successful validation
+✓ Validation without optional fields
+✓ First name too short
+✓ Invalid email
+✓ Phone too short
+✓ Phone not numeric
+✓ Age out of range
+✓ Missing required fields
+✓ Name normalization
 
-Pruebas exitosas: 11/11 ✓
+All tests passing: 11/11 ✓
 
-═══════════════════════════════════════════════════════════════════════════════
+Notes
+-----
 
-📚 DOCUMENTACIÓN DISPONIBLE
-═══════════════════════════════════════════════════════════════════════════════
+The project is modular, well-documented, and ready for extension:
+- Add a database (SQLAlchemy)
+- Implement auth (JWT)
+- Add caching, rate limiting, CI/CD, Docker support
 
-1. README.md
-   • Guía completa de instalación
-   • Descripción de endpoints
-   • Ejemplos con cURL
-   • Información de dependencias
-   • Troubleshooting
-
-2. EJEMPLOS.md
-   • Ejemplos con cURL
-   • Ejemplos con Python
-   • Ejemplos con JavaScript
-   • Test unitarios con pytest
-   • Batch processing
-
-3. Swagger UI (Interactivo)
-   http://localhost:8000/docs
-
-═══════════════════════════════════════════════════════════════════════════════
-
-🔧 CONFIGURACIÓN RECOMENDADA
-═══════════════════════════════════════════════════════════════════════════════
-
-Para DESARROLLO (con auto-reload):
-  python -m uvicorn main:app --host localhost --port 8000 --reload
-
-Para PRODUCCIÓN (sin auto-reload):
-  python -m uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
-
-Para cambiar PUERTO:
-  python -m uvicorn main:app --host localhost --port 9000
-
-═══════════════════════════════════════════════════════════════════════════════
-
-🎯 CAPACIDADES ADICIONALES
-═══════════════════════════════════════════════════════════════════════════════
-
-La API está lista para ser extendida fácilmente:
-
-✨ Fácil de escalar:
-   • Estructura modular (app/models.py, app/validators.py)
-   • Nuevos validadores se añaden en validators.py
-   • Nuevos endpoints se crean en main.py
-   • Compatible con bases de datos (SQLAlchemy)
-   • Compatible con autenticación (JWT, OAuth2)
-   • Compatible con CORS
-   • Compatible con Rate Limiting
-   • Compatible con caché
-
-═══════════════════════════════════════════════════════════════════════════════
-
-✅ CHECKLIST DE COMPLETITUD
-═══════════════════════════════════════════════════════════════════════════════
-
-✓ API REST funcional con FastAPI
-✓ Endpoint POST /validar con todas las validaciones
-✓ Endpoint GET / con información de la API
-✓ Endpoint GET /health para health checks
-✓ Validación con Pydantic (modelos tipados)
-✓ Normalización de nombres
-✓ Validación de email con regex
-✓ Validación de teléfono (numérico, 7+ dígitos)
-✓ Validación de edad (0-120)
-✓ Campos obligatorios: nombre, apellido, email
-✓ Campos opcionales: teléfono, edad
-✓ Manejo global de errores
-✓ Logging de peticiones
-✓ Swagger UI automático
-✓ Código modular y limpio
-✓ requirements.txt completo
-✓ Script de pruebas automatizadas (11/11 ✓)
-✓ Documentación completa (README.md)
-✓ Ejemplos de uso (EJEMPLOS.md)
-✓ Servir en localhost:8000 con uvicorn
-✓ 100% funcional y lista para producción
-
-═══════════════════════════════════════════════════════════════════════════════
-
-💡 PRÓXIMOS PASOS OPCIONALES
-═══════════════════════════════════════════════════════════════════════════════
-
-1. Agregar CORS para frontend:
-   from fastapi.middleware.cors import CORSMiddleware
-
-2. Agregar autenticación:
-   from fastapi.security import HTTPBearer
-
-3. Agregar base de datos:
-   from sqlalchemy import create_engine
-
-4. Agregar caché:
-   from functools import lru_cache
-
-5. Agregar rate limiting:
-   from slowapi import Limiter
-
-6. Agregar tests con pytest:
-   pytest test_api.py
-
-═══════════════════════════════════════════════════════════════════════════════
-
-🎉 ¡LA API ESTÁ 100% COMPLETA Y FUNCIONAL!
-
-Puedes acceder a la documentación en:
-🌐 http://localhost:8000/docs
-
-Y probar la API directamente desde el navegador.
-
-═══════════════════════════════════════════════════════════════════════════════
 """
 
 if __name__ == "__main__":
-    print(__doc__)
+      print(__doc__)

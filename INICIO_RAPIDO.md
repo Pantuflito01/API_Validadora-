@@ -1,81 +1,81 @@
-# 🚀 Guía Rápida de Inicio
+# 🚀 Quick Start Guide
 
-## ⚡ 30 segundos para tener la API funcionando
+## ⚡ 30 seconds to get the API running
 
-### 1️⃣ Instalar dependencias
+### 1️⃣ Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Iniciar el servidor
+### 2️⃣ Start the server
 ```bash
 python -m uvicorn main:app --host localhost --port 8000
 ```
 
-### 3️⃣ Abrir documentación interactiva
+### 3️⃣ Open interactive docs
 ```
 http://localhost:8000/docs
 ```
 
 ---
 
-## 📝 Probar la API
+## 📝 Try the API
 
-### Con curl (terminal)
+### Using curl (terminal)
 
-**Validación exitosa:**
+**Successful validation:**
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
-  -d '{"nombre":"juan","apellido":"perez","email":"juan@example.com"}'
+  -d '{"first_name":"juan","last_name":"perez","email":"juan@example.com"}'
 ```
 
-**Respuesta:**
+**Response:**
 ```json
 {
-  "valido": true,
-  "mensaje": "Datos validados correctamente",
-  "datos": {
-    "nombre": "Juan",
-    "apellido": "Perez",
+  "valid": true,
+  "message": "Data validated successfully",
+  "data": {
+    "first_name": "Juan",
+    "last_name": "Perez",
     "email": "juan@example.com",
-    "telefono": null,
-    "edad": null
+    "phone": null,
+    "age": null
   }
 }
 ```
 
-### Con Python
+### Using Python
 
 ```python
 import requests
 
-url = "http://localhost:8000/validar"
-datos = {
-    "nombre": "maria",
-    "apellido": "garcia",
+url = "http://localhost:8000/validate"
+payload = {
+    "first_name": "maria",
+    "last_name": "garcia",
     "email": "maria@example.com",
-    "telefono": "1234567",
-    "edad": 28
+    "phone": "1234567",
+    "age": 28
 }
 
-response = requests.post(url, json=datos)
+response = requests.post(url, json=payload)
 print(response.json())
 ```
 
-### Con JavaScript/Fetch
+### Using JavaScript/Fetch
 
 ```javascript
-const datos = {
-  nombre: "carlos",
-  apellido: "lopez",
+const payload = {
+  first_name: "carlos",
+  last_name: "lopez",
   email: "carlos@example.com"
 };
 
-fetch('http://localhost:8000/validar', {
+fetch('http://localhost:8000/validate', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(datos)
+  body: JSON.stringify(payload)
 })
 .then(r => r.json())
 .then(data => console.log(data));
@@ -83,58 +83,58 @@ fetch('http://localhost:8000/validar', {
 
 ---
 
-## 🧪 Ejecutar pruebas
+## 🧪 Run tests
 
 ```bash
 python test_api.py
 ```
 
-Resultado esperado: **11/11 pruebas exitosas ✓**
+Expected result: **11/11 tests passing ✓**
 
 ---
 
-## 📚 Documentación
+## 📚 Documentation
 
-| Link | Descripción |
+| Link | Description |
 |------|------------|
-| [README.md](README.md) | Documentación completa |
-| [EJEMPLOS.md](EJEMPLOS.md) | Ejemplos en múltiples lenguajes |
-| http://localhost:8000/docs | Swagger UI interactivo |
-| http://localhost:8000/redoc | Documentación ReDoc |
+| [README.md](README.md) | Full documentation |
+| [EJEMPLOS.md](EJEMPLOS.md) | Examples in multiple languages |
+| http://localhost:8000/docs | Swagger UI interactive |
+| http://localhost:8000/redoc | ReDoc documentation |
 
 ---
 
-## 🎯 Campos de validación
+## 🎯 Validation fields
 
-| Campo | Requerido | Validación |
-|-------|-----------|-----------|
-| **nombre** | ✅ Sí | Mínimo 2 caracteres |
-| **apellido** | ✅ Sí | Mínimo 2 caracteres |
-| **email** | ✅ Sí | Formato email válido |
-| **telefono** | ❌ No | Solo dígitos, mínimo 7 |
-| **edad** | ❌ No | Entre 0 y 120 |
+| Field | Required | Validation |
+|-------|----------|-----------|
+| **first_name** | ✅ Yes | Minimum 2 characters |
+| **last_name** | ✅ Yes | Minimum 2 characters |
+| **email** | ✅ Yes | Must be a valid email format |
+| **phone** | ❌ No | Digits only, minimum 7 |
+| **age** | ❌ No | Between 0 and 120 |
 
 ---
 
-## 🚨 Errores comunes
+## 🚨 Common errors
 
 ### Error: "Connection refused"
-- Asegúrate de que el servidor está corriendo: `python -m uvicorn main:app --host localhost --port 8000`
+- Make sure the server is running: `python -m uvicorn main:app --host localhost --port 8000`
 
 ### Error: "Module not found"
-- Instala las dependencias: `pip install -r requirements.txt`
+- Install dependencies: `pip install -r requirements.txt`
 
-### Error: "Email inválido"
-- Verifica que el email tenga el formato correcto: `usuario@dominio.com`
+### Error: "Invalid email"
+- Verify the email format: `user@domain.com`
 
 ---
 
-## 🎉 ¡Listo!
+## 🎉 Ready!
 
-Tu API REST está completamente funcional y lista para:
-- ✅ Probar en local
-- ✅ Integrar con tu aplicación
-- ✅ Desplegar en producción
-- ✅ Escalar según necesites
+Your REST API is fully functional and ready to:
+- ✅ Test locally
+- ✅ Integrate with your application
+- ✅ Deploy to production
+- ✅ Scale as needed
 
-**¡Diviértete construyendo!** 🚀
+Have fun building! 🚀
