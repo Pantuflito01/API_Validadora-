@@ -1,48 +1,52 @@
 """
-Funciones de validación personalizada para datos de usuario.
+Custom validation helpers for user data.
+
+These helpers are small utilities used by examples and documentation.
+They are not required by the Pydantic `UsuarioValidation` model which
+implements its own field validators.
 """
 
 import re
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict
 
 
-def validar_email(email: str) -> Tuple[bool, str]:
+def validate_email(email: str) -> Tuple[bool, str]:
     """
-    Valida el formato de un email usando expresión regular.
-    
+    Validate an email string using a simple regex.
+
     Args:
-        email: String del email a validar
-        
+        email: the email string to validate
+
     Returns:
-        Tupla con (es_válido, mensaje_error)
+        Tuple of (is_valid, error_message). `error_message` is empty on success.
     """
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if re.match(pattern, email):
         return True, ""
-    return False, "Formato de email inválido"
+    return False, "Invalid email format"
 
 
-def capitalizar_nombre(nombre: str) -> str:
+def capitalize_name(name: str) -> str:
     """
-    Capitaliza la primera letra del nombre y minúsculas el resto.
-    
+    Capitalize the first letter and lowercase the rest, trimming whitespace.
+
     Args:
-        nombre: String del nombre a normalizar
-        
+        name: raw name string
+
     Returns:
-        Nombre normalizado
+        Normalized name string
     """
-    return nombre.strip().capitalize()
+    return name.strip().capitalize()
 
 
-def contar_errores_validacion(errores: Dict) -> int:
+def count_validation_errors(errors: Dict) -> int:
     """
-    Cuenta la cantidad de campos con errores de validación.
-    
+    Count the number of fields that have validation errors.
+
     Args:
-        errores: Diccionario de errores de validación
-        
+        errors: dictionary mapping field -> error info
+
     Returns:
-        Cantidad de campos con errores
+        Integer count of keys in `errors`.
     """
-    return len(errores)
+    return len(errors)

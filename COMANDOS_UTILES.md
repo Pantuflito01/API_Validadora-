@@ -1,200 +1,196 @@
-# 📋 Comandos Útiles
+# Useful Commands
 
-## 🚀 Operaciones Básicas
+## Basic operations
 
-### Instalar dependencias
+### Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### Iniciar el servidor
+### Start the server
 ```bash
 python -m uvicorn main:app --host localhost --port 8000
 ```
 
-### Iniciar con recarga automática (desarrollo)
+### Start in development mode (auto-reload)
 ```bash
 python -m uvicorn main:app --host localhost --port 8000 --reload
 ```
 
-### Ejecutar pruebas
+### Run tests
 ```bash
 python test_api.py
 ```
 
 ---
 
-## 🧪 Pruebas con curl
+## cURL examples
 
-### 1. Health Check
+### Health check
 ```bash
 curl http://localhost:8000/health
 ```
 
-### 2. Info de la API
+### API info
 ```bash
 curl http://localhost:8000/
 ```
 
-### 3. Validación exitosa (todos los campos)
+### Successful validation (all fields)
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "juan",
-    "apellido": "perez",
+    "first_name": "juan",
+    "last_name": "perez",
     "email": "juan@example.com",
-    "telefono": "1234567890",
-    "edad": 30
+    "phone": "1234567890",
+    "age": 30
   }'
 ```
 
-### 4. Validación con solo campos obligatorios
+### Required fields only
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "maria",
-    "apellido": "garcia",
+    "first_name": "maria",
+    "last_name": "garcia",
     "email": "maria@example.com"
   }'
 ```
 
-### 5. Prueba de error (nombre muy corto)
+### Validation error (first name too short)
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "a",
-    "apellido": "perez",
+    "first_name": "a",
+    "last_name": "perez",
     "email": "test@example.com"
   }'
 ```
 
-### 6. Prueba de error (email inválido)
+### Validation error (invalid email)
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "juan",
-    "apellido": "perez",
-    "email": "email-invalido"
+    "first_name": "juan",
+    "last_name": "perez",
+    "email": "invalid-email"
   }'
 ```
 
-### 7. Prueba de error (teléfono muy corto)
+### Validation error (phone too short)
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "juan",
-    "apellido": "perez",
+    "first_name": "juan",
+    "last_name": "perez",
     "email": "juan@example.com",
-    "telefono": "123"
+    "phone": "123"
   }'
 ```
 
-### 8. Prueba de error (edad fuera de rango)
+### Validation error (age out of range)
 ```bash
-curl -X POST "http://localhost:8000/validar" \
+curl -X POST "http://localhost:8000/validate" \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "juan",
-    "apellido": "perez",
+    "first_name": "juan",
+    "last_name": "perez",
     "email": "juan@example.com",
-    "edad": 150
+    "age": 150
   }'
 ```
 
 ---
 
-## 🐍 Pruebas con Python
+## Python examples (requests)
 
-### Script de prueba simple
+### Simple test script
 ```python
 import requests
 
-url = "http://localhost:8000/validar"
+url = "http://localhost:8000/validate"
 
-# Datos válidos
-datos = {
-    "nombre": "carlos",
-    "apellido": "lopez",
+# Valid data
+payload = {
+    "first_name": "carlos",
+    "last_name": "lopez",
     "email": "carlos@example.com",
-    "edad": 25
+    "age": 25
 }
 
-response = requests.post(url, json=datos)
+response = requests.post(url, json=payload)
 print(response.json())
 ```
 
-### Prueba con validaciones
+### Helper function with validations
 ```python
 import requests
 
-def validar_usuario(nombre, apellido, email, telefono=None, edad=None):
-    url = "http://localhost:8000/validar"
-    
-    datos = {
-        "nombre": nombre,
-        "apellido": apellido,
+def validate_user(first_name, last_name, email, phone=None, age=None):
+    url = "http://localhost:8000/validate"
+    payload = {
+        "first_name": first_name,
+        "last_name": last_name,
         "email": email
     }
-    
-    if telefono:
-        datos["telefono"] = telefono
-    if edad:
-        datos["edad"] = edad
-    
-    response = requests.post(url, json=datos)
-    
+    if phone:
+        payload["phone"] = phone
+    if age:
+        payload["age"] = age
+
+    response = requests.post(url, json=payload)
     if response.status_code == 200:
-        print("✅ Validación exitosa")
-        print(response.json()["datos"])
+        print("✅ Validation successful")
+        print(response.json()["data"])
     else:
-        print("❌ Error de validación")
+        print("❌ Validation error")
         print(response.json())
 
-# Probar
-validar_usuario("juan", "perez", "juan@example.com", "1234567890", 30)
+# Run
+validate_user("juan", "perez", "juan@example.com", "1234567890", 30)
 ```
 
 ---
 
-## 🌐 Pruebas con JavaScript
+## JavaScript (fetch / axios)
 
 ### Fetch API
 ```javascript
-const validar = async (nombre, apellido, email, telefono, edad) => {
-  const datos = { nombre, apellido, email };
-  
-  if (telefono) datos.telefono = telefono;
-  if (edad) datos.edad = edad;
-  
-  const response = await fetch('http://localhost:8000/validar', {
+const validate = async (first_name, last_name, email, phone, age) => {
+  const payload = { first_name, last_name, email };
+  if (phone) payload.phone = phone;
+  if (age) payload.age = age;
+
+  const response = await fetch('http://localhost:8000/validate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(datos)
+    body: JSON.stringify(payload)
   });
-  
-  const resultado = await response.json();
-  console.log(resultado);
+
+  const result = await response.json();
+  console.log(result);
 };
 
-// Usar
-validar('juan', 'perez', 'juan@example.com', '1234567890', 30);
+// Usage
+validate('juan', 'perez', 'juan@example.com', '1234567890', 30);
 ```
 
 ### Axios
 ```javascript
 const axios = require('axios');
 
-axios.post('http://localhost:8000/validar', {
-  nombre: 'juan',
-  apellido: 'perez',
+axios.post('http://localhost:8000/validate', {
+  first_name: 'juan',
+  last_name: 'perez',
   email: 'juan@example.com',
-  telefono: '1234567890',
-  edad: 30
+  phone: '1234567890',
+  age: 30
 })
 .then(res => console.log(res.data))
 .catch(err => console.log(err.response.data));

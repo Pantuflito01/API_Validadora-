@@ -1,44 +1,44 @@
 #!/bin/bash
 
-# Script de inicio rápido para la API Validadora
+# Quick start script for the Personal Data Validator API
 
 echo "============================================================"
-echo "🚀 API Validadora de Datos Personales"
+echo "🚀 Personal Data Validator API - Quick Start"
 echo "============================================================"
 echo ""
 
-# Verificar Python
+# Check Python
 if ! command -v python &> /dev/null; then
-    echo "❌ Python no está instalado"
+    echo "❌ Python is not installed"
     exit 1
 fi
 
-echo "✓ Python encontrado: $(python --version)"
+echo "✓ Python found: $(python --version)"
 echo ""
 
-# Crear entorno virtual si no existe
+# Create virtual environment if missing
 if [ ! -d "venv" ]; then
-    echo "📦 Creando entorno virtual..."
+    echo "📦 Creating virtual environment..."
     python -m venv venv
 fi
 
-# Activar entorno virtual
-echo "🔌 Activando entorno virtual..."
+# Activate virtual environment
+echo "🔌 Activating virtual environment..."
 source venv/bin/activate
 
-# Instalar dependencias
-echo "📚 Instalando dependencias..."
+# Install dependencies
+echo "📚 Installing dependencies..."
 pip install -q -r requirements.txt
 
 echo ""
 echo "============================================================"
-echo "✅ Configuración completada"
+echo "✅ Setup complete"
 echo "============================================================"
 echo ""
-echo "📊 Opciones disponibles:"
+echo "Available actions:"
 echo ""
-echo "1️⃣  Iniciar servidor:      python -m uvicorn main:app --host localhost --port 8000"
-echo "2️⃣  Ejecutar pruebas:      python test_api.py"
-echo "3️⃣  Acceder a Swagger:     http://localhost:8000/docs"
+echo "1) Start server:      python -m uvicorn main:app --host localhost --port 8000"
+echo "2) Run tests:         python test_api.py"
+echo "3) Open Swagger UI:   http://localhost:8000/docs"
 echo ""
 echo "============================================================"

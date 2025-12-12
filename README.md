@@ -3,9 +3,9 @@
 FastAPI REST API for validating personal data using Pydantic.
 
 Features
-- Validate and normalize `nombre` (first name) and `apellido` (last name)
+- Validate and normalize `first_name` and `last_name`
 - Validate `email` using a robust validator
-- Optional `telefono` (digits only, min 7) and `edad` (0-120)
+- Optional `phone` (digits only, min 7) and `age` (0-120)
 - Automatic name capitalization
 - Swagger UI and ReDoc documentation
 - Logging and global error handling
@@ -295,7 +295,7 @@ All tests passed successfully!
 
 ---
 
-## 🧩 Estructura del Proyecto
+## 🧩 Project Structure
 
 ```
 API_Validadora/
@@ -303,7 +303,7 @@ API_Validadora/
 ├── app/
 │   ├── __init__.py        # Package initializer
 │   ├── models.py          # Pydantic models with validators
-│   └── validators.py      # Custom validation functions
+│   └── validators.py      # Custom validation helpers
 ├── test_api.py            # Automated test script
 ├── requirements.txt       # Project dependencies
 └── README.md              # This file
@@ -311,35 +311,35 @@ API_Validadora/
 
 ---
 
-## 📦 Dependencias
+## 📦 Dependencies
 
-| Paquete | Versión | Propósito |
-|---------|---------|----------|
-| `fastapi` | 0.104.1 | Framework web moderno |
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `fastapi` | 0.104.1 | Web framework |
 | `pydantic` | 2.5.0 | Data validation |
-| `pydantic-extra-types` | 2.1.0 | Tipos adicionales de Pydantic |
-| `uvicorn[standard]` | 0.24.0 | Servidor ASGI |
-| `email-validator` | 2.1.0 | Validación de emails |
-| `python-multipart` | 0.0.6 | Parseo de multipart/form-data |
-| `requests` | (en test_api.py) | Cliente HTTP para pruebas |
+| `pydantic-extra-types` | 2.1.0 | Additional Pydantic types |
+| `uvicorn[standard]` | 0.24.0 | ASGI server |
+| `email-validator` | 2.1.0 | Email validation |
+| `python-multipart` | 0.0.6 | multipart/form-data parsing |
+| `requests` | (used in test_api.py) | HTTP client for tests |
 
 ---
 
-## 🔍 Swagger UI (Documentación Interactiva)
+## 🔍 Swagger UI (Interactive Documentation)
 
-Accede a la documentación interactiva y prueba los endpoints en tiempo real:
+Open the interactive docs and try endpoints in real time:
 
 **URL:** http://localhost:8000/docs
 
-En Swagger UI puedes:
-- Ver todos los endpoints disponibles
-- Probar las peticiones en tiempo real
-- Ver esquemas JSON automáticos
-- Visualizar ejemplos de respuestas
+In Swagger UI you can:
+- View all available endpoints
+- Try requests live
+- See generated JSON schemas
+- View sample responses
 
 ---
 
-## 📊 Validaciones Implementadas
+## 📊 Implemented Validations
 
 ### First and Last Names
 - ✅ Minimum 2 characters
@@ -366,12 +366,12 @@ En Swagger UI puedes:
 
 ## 📝 Logging
 
-La API registra automáticamente:
-- Hora exacta de cada petición
-- Endpoint solicitado
-- Datos del usuario validado
-- Resultado de la validación
-- Errores y excepciones
+The API automatically logs:
+- Exact timestamp of each request
+- Requested endpoint
+- The validated user data (as permitted by your logging policy)
+- Validation result
+- Errors and exceptions
 
 **Example logs:**
 ```
@@ -382,14 +382,14 @@ La API registra automáticamente:
 
 ---
 
-## 🚀 Ejemplo de Uso Completo
+## 🚀 Complete Usage Example
 
-### 1. Iniciar la API
+### 1. Start the API
 ```bash
 python -m uvicorn main:app --host localhost --port 8000
 ```
 
-### 2. Hacer una petición desde otro terminal o usando Postman
+### 2. Make a request (from another terminal or Postman)
 
 ```bash
 curl -X POST http://localhost:8000/validate \
@@ -403,7 +403,7 @@ curl -X POST http://localhost:8000/validate \
   }' | python -m json.tool
 ```
 
-### 3. Respuesta esperada
+### 3. Expected response
 
 ```json
 {
@@ -424,62 +424,62 @@ curl -X POST http://localhost:8000/validate \
 
 ## 🛠️ Customization
 
-### Cambiar puerto
+### Change port
 ```bash
 python -m uvicorn main:app --host localhost --port 9000
 ```
 
-### Cambiar host
+### Change host
 ```bash
 python -m uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-### Modo desarrollo con auto-reload
+### Development mode (auto-reload)
 ```bash
 python -m uvicorn main:app --host localhost --port 8000 --reload
 ```
 
 ---
 
-## 📈 Escalabilidad
+## 📈 Scalability
 
-Este proyecto está diseñado para ser escalable:
+This project is designed to be scalable:
 
-- ✅ Estructura modular con separación de concerns
-- ✅ Validadores reutilizables
-- ✅ Manejadores de errores globales
-- ✅ Logging centralizado
-- ✅ Fácil de añadir nuevos endpoints
-- ✅ Compatible con bases de datos (SQLAlchemy, etc.)
-- ✅ Compatible con autenticación (JWT, OAuth2, etc.)
+- ✅ Modular structure with separation of concerns
+- ✅ Reusable validators
+- ✅ Global error handlers
+- ✅ Centralized logging
+- ✅ Easy to add new endpoints
+- ✅ Compatible with databases (SQLAlchemy, etc.)
+- ✅ Compatible with authentication (JWT, OAuth2, etc.)
 
 ---
 
-## 🐛 Resolución de Problemas
+## 🐛 Troubleshooting
 
 ### Error: "ModuleNotFoundError: No module named 'fastapi'"
-**Solución:** Asegúrate de instalar las dependencias: `pip install -r requirements.txt`
+**Fix:** Install dependencies: `pip install -r requirements.txt`
 
 ### Error: "Address already in use: ('localhost', 8000)"
-**Solución:** El puerto 8000 ya está en uso. Usa otro puerto:
+**Fix:** Port 8000 is already in use. Use another port:
 ```bash
 python -m uvicorn main:app --host localhost --port 8001
 ```
 
-### Las validaciones no funcionan
-**Solución:** Verifica que estés enviando los datos en formato JSON con el header `Content-Type: application/json`
+### Validations not working
+**Fix:** Ensure you are sending JSON with the header `Content-Type: application/json`
 
 ---
 
-## 📜 Licencia
+## 📜 License
 
-Proyecto libre para uso educativo y profesional.
+Open-source for educational and professional use.
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
-Proyecto de API REST con FastAPI - Diciembre 2025
+Personal Data Validator API project - December 2025
 
 ---
 
@@ -512,4 +512,4 @@ Para problemas o preguntas, revisa:
 - ✅ Servir en localhost:8000 con uvicorn
 - ✅ 100% funcional y lista para producción
 
-¡La API está lista para usar! 🎉
+The API is ready to use! 🎉

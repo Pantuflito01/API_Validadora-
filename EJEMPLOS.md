@@ -1,223 +1,171 @@
-# Ejemplos de Uso de la API Validadora
+# Examples for the Personal Data Validator API
 
-## 🔧 Ejemplos con cURL
+## cURL examples
 
-### 1. Health Check
+### 1) Health check
 ```bash
 curl http://localhost:8000/health
 ```
 
-### 2. Obtener información de la API
+### 2) API info
 ```bash
 curl http://localhost:8000/
 ```
 
-### 3. Validación exitosa con todos los campos
+### 3) Successful validation (all fields)
 ```bash
-    "first_name": "juan",
-    "last_name": "perez",
-    "email": "juan.perez@example.com",
-    "phone": "1234567890",
-    "age": 30
-    "email": "juan.perez@example.com",
-    "telefono": "1234567890",
-    "edad": 30
-  }'
-```
-
-### 4. Validación sin campos opcionales
-```bash
-curl -X POST http://localhost:8000/validar \
-  -H "Content-Type: application/json" \
-    "first_name": "maria",
-    "last_name": "garcia",
-    "email": "maria.garcia@example.com"
-    "email": "maria.garcia@example.com"
-  }'
-```
-
-### 5. Error: Email inválido
-```bash
-curl -X POST http://localhost:8000/validar \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "carlos",
-    "first_name": "carlos",
-    "last_name": "lopez",
-    "email": "invalid-email"
-```
-
-### 6. Guardando respuesta en archivo
-```bash
-curl -X POST http://localhost:8000/validar \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "ana",
-    "apellido": "martinez",
-    "email": "ana@example.com"
-    "first_name": "ana",
-    "last_name": "martinez",
-    "email": "ana@example.com"
-### 7. Con formato JSON pretty-printed
-```bash
-curl -X POST http://localhost:8000/validar \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "luis",
-    "apellido": "rodriguez",
-    "email": "luis@example.com",
-    "edad": 25
-  }' | python -m json.tool
-```
-    "first_name": "luis",
-    "last_name": "rodriguez",
-    "email": "luis@example.com",
-    "age": 25
-
-### 1. Uso básico con requests
-```python
-import requests
-import json
-
-url = "http://localhost:8000/validar"
-datos = {
-    "nombre": "juan",
-    "apellido": "perez",
-    "email": "juan.perez@example.com",
-    "telefono": "1234567890",
-    "edad": 30
-}
-
-    "first_name": "juan",
-    "last_name": "perez",
-    "email": "juan.perez@example.com",
-    "phone": "1234567890",
-    "age": 30
-```python
-import requests
-
-url = "http://localhost:8000/validar"
-datos = {
-    "nombre": "a",  # Muy corto
-    "apellido": "perez",
-    "email": "juan.perez@example.com"
-}
-
-respuesta = requests.post(url, json=datos)
-    "first_name": "a",  # Too short
-    "last_name": "perez",
-    "email": "juan.perez@example.com"
-    print(respuesta.json())
-elif respuesta.status_code == 422:
-    print("✗ Error de validación")
-    print(respuesta.json())
-else:
-    print(f"✗ Error del servidor: {respuesta.status_code}")
-```
-
-### 3. Validar múltiples usuarios
-```python
-import requests
-import json
-
-usuarios = [
-    {
-        "nombre": "juan",
-        "apellido": "perez",
-        "email": "juan@example.com",
-        "telefono": "1234567890",
-        "edad": 30
-    },
-    {
-        "nombre": "maria",
-        "apellido": "garcia",
-        "email": "maria@example.com",
-        "edad": 25
+curl -X POST http://localhost:8000/validate \
+    -H "Content-Type: application/json" \
+    -d '{
         "first_name": "juan",
         "last_name": "perez",
-        "email": "juan@example.com",
+        "email": "juan.perez@example.com",
         "phone": "1234567890",
         "age": 30
-    }
-]
-
-url = "http://localhost:8000/validar"
-
-for usuario in usuarios:
-    respuesta = requests.post(url, json=usuario)
-    
-    if respuesta.status_code == 200:
-        data = respuesta.json()['datos']
-        print(f"✓ {data['nombre']} {data['apellido']} - {data['email']}")
-    else:
-        print(f"✗ Error validando: {usuario}")
+    }'
 ```
 
-### 4. Con client HTTP personalizado
+### 4) Validation with required fields only
+```bash
+curl -X POST http://localhost:8000/validate \
+    -H "Content-Type: application/json" \
+    -d '{
+        "first_name": "maria",
+        "last_name": "garcia",
+        "email": "maria.garcia@example.com"
+    }'
+```
+
+### 5) Invalid email example
+```bash
+curl -X POST http://localhost:8000/validate \
+    -H "Content-Type: application/json" \
+    -d '{
+        "first_name": "carlos",
+        "last_name": "lopez",
+        "email": "invalid-email"
+    }'
+```
+
+### 6) Save response to file
+```bash
+curl -X POST http://localhost:8000/validate \
+    -H "Content-Type: application/json" \
+    -d '{
+        "first_name": "ana",
+        "last_name": "martinez",
+        "email": "ana@example.com"
+    }' > response.json
+```
+
+### 7) Pretty-print JSON
+```bash
+curl -X POST http://localhost:8000/validate \
+    -H "Content-Type: application/json" \
+    -d '{
+        "first_name": "luis",
+        "last_name": "rodriguez",
+        "email": "luis@example.com",
+        "age": 25
+    }' | python -m json.tool
+```
+
+## Python (requests)
+
+### Basic usage
 ```python
 import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 
-def crear_sesion_con_reintentos():
-    """Crea una sesión con reintentos automáticos"""
-    s = requests.Session()
-    reintentos = Retry(
-        total=3,
-        backoff_factor=0.1,
-    "first_name": "juan",
-    "last_name": "perez",
-    "email": "juan@example.com"
-    s.mount('http://', adaptador)
-    s.mount('https://', adaptador)
-    return s
-
-sesion = crear_sesion_con_reintentos()
-
-datos = {
-    "nombre": "juan",
-    "apellido": "perez",
-    "email": "juan@example.com"
+url = "http://localhost:8000/validate"
+payload = {
+        "first_name": "juan",
+        "last_name": "perez",
+        "email": "juan.perez@example.com",
+        "phone": "1234567890",
+        "age": 30
 }
 
-respuesta = sesion.post("http://localhost:8000/validar", json=datos)
-print(respuesta.json())
+response = requests.post(url, json=payload)
+print(response.json())
 ```
 
-### 5. Usando httpx (cliente asincrónico)
+### Handling errors
+```python
+import requests
+
+url = "http://localhost:8000/validate"
+payload = {
+        "first_name": "a",  # Too short
+        "last_name": "perez",
+        "email": "juan.perez@example.com"
+}
+
+response = requests.post(url, json=payload)
+if response.status_code == 200:
+        print("✓ OK", response.json())
+elif response.status_code == 422:
+        print("✗ Validation error", response.json())
+else:
+        print(f"✗ Server error: {response.status_code}")
+```
+
+### Validate multiple users
+```python
+import requests
+
+users = [
+        {
+                "first_name": "juan",
+                "last_name": "perez",
+                "email": "juan@example.com",
+                "phone": "1234567890",
+                "age": 30
+        },
+        {
+                "first_name": "maria",
+                "last_name": "garcia",
+                "email": "maria@example.com",
+                "age": 25
+        }
+]
+
+url = "http://localhost:8000/validate"
+for user in users:
+        resp = requests.post(url, json=user)
+        if resp.status_code == 200:
+                data = resp.json()["data"]
+                print(f"✓ {data['first_name']} {data['last_name']} - {data['email']}")
+        else:
+                print(f"✗ Error validating: {user}")
+```
+
+## httpx (async)
+
 ```python
 import httpx
 import asyncio
 import json
 
-async def validar_usuario():
-    async with httpx.AsyncClient() as client:
-            "first_name": "juan",
-            "last_name": "perez",
-            "email": "juan@example.com"
-            "email": "juan@example.com"
-        }
-        
-        respuesta = await client.post(
-            "http://localhost:8000/validar",
-            json=datos
-        )
-        
-        print(json.dumps(respuesta.json(), indent=2))
+async def validate_user():
+        async with httpx.AsyncClient() as client:
+                payload = {
+                        "first_name": "juan",
+                        "last_name": "perez",
+                        "email": "juan@example.com"
+                }
+                resp = await client.post("http://localhost:8000/validate", json=payload)
+                print(json.dumps(resp.json(), indent=2))
 
-# Ejecutar
-asyncio.run(validar_usuario())
+asyncio.run(validate_user())
 ```
 
----
+## Testing (pytest)
 
-## 🧪 Test Unitario (pytest)
+Run the included test script:
 
-```python
-import pytest
-from fastapi.testclient import TestClient
-            "first_name": "juan",
-            "last_name": "perez",
+```bash
+python test_api.py
+```
             "email": "juan@example.com"
 
 def test_validacion_exitosa():
