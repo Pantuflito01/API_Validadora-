@@ -1,10 +1,10 @@
 """
-API REST para validación de datos personales usando FastAPI.
+Personal Data Validator API using FastAPI.
 
 Endpoints:
-    POST /validar - Valida datos personales de un usuario
-    GET / - Información de la API
-    GET /docs - Documentación interactiva Swagger UI
+    POST /validate - Validate personal data for a user
+    GET / - API information
+    GET /docs - Interactive Swagger UI
 """
 
 import logging
@@ -17,7 +17,7 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
-from app.models import UsuarioValidacion
+from app.models import UsuarioValidation
 
 # ==================== CONFIGURACIÓN DE LOGGING ====================
 logging.basicConfig(
@@ -29,44 +29,34 @@ logger = logging.getLogger(__name__)
 
 # ==================== MANEJADOR GLOBAL DE ERRORES ====================
 def format_validation_errors(errors: list) -> Dict[str, str]:
-    """
-    Formatea los errores de validación de Pydantic en un diccionario amigable.
-    
-    Args:
-        errors: Lista de errores de ValidationError de Pydantic
-        
-    Returns:
-        Diccionario con errores por campo
-    """
+    """Format Pydantic validation errors into a friendly dict."""
     error_dict = {}
     for error in errors:
         field = error['loc'][0] if error['loc'] else 'general'
         message = error['msg']
-        
-        # Hacer el mensaje más legible
+
+        # Normalize known messages
         if 'at least 2 characters' in message:
-            message = 'Debe tener mínimo 2 caracteres'
-        elif 'ensure this value is' in message:
-            message = error['msg']
-        
+            message = 'Must have at least 2 characters'
+
         error_dict[str(field)] = message
-    
+
     return error_dict
 
 
 # ==================== LIFESPAN MANAGER ====================
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Gestor de ciclo de vida de la aplicación."""
-    logger.info("API Validadora iniciada correctamente")
+    """Application lifespan manager."""
+    logger.info("Personal Data Validator API started")
     yield
-    logger.info("API Validadora desconectada")
+    logger.info("Personal Data Validator API stopped")
 
 
 # ==================== INICIALIZACIÓN DE FASTAPI ====================
 app = FastAPI(
-    title="API Validadora de Datos Personales",
-    description="API REST para validar datos personales de usuarios con validaciones avanzadas",
+    title="Personal Data Validator API",
+    description="REST API to validate and normalize personal data using Pydantic",
     version="1.0.0",
     lifespan=lifespan,
     contact={
@@ -80,17 +70,12 @@ app = FastAPI(
 
 @app.get("/", tags=["Info"])
 async def root() -> Dict[str, Any]:
-    """
-    Endpoint raíz con información de la API.
-    
-    Returns:
-        Diccionario con información de la API
-    """
+    """Root endpoint with API information."""
     return {
-        "nombre": "API Validadora",
+        "name": "Personal Data Validator API",
         "version": "1.0.0",
-        "descripcion": "API REST para validar datos personales de usuarios",
-        "documentacion": "http://localhost:8000/docs",
+        "description": "Personal data validation REST API",
+        "documentation": "http://localhost:8000/docs",
         "timestamp": datetime.now().isoformat()
     }
 
@@ -107,75 +92,65 @@ async def health_check() -> Dict[str, str]:
 
 
 @app.post("/validar", tags=["Validación"])
-async def validar_usuario(usuario: UsuarioValidacion) -> Dict[str, Any]:
-    """
-    Valida los datos personales de un usuario.
-    
-    Campos requeridos:
-        - nombre (string, mínimo 2 caracteres)
-        - apellido (string, mínimo 2 caracteres)
-        - email (string, formato email válido)
-    
-    Campos opcionales:
-        - telefono (string, numérico, mínimo 7 dígitos)
-        - edad (int, entre 0 y 120)
-    
-    Args:
-        usuario: Objeto UsuarioValidacion con los datos a validar
-        
-    Returns:
-        JSON indicando validación exitosa con datos normalizados
-        
-    Raises:
-        HTTPException: Si hay errores de validación
+@app.post("/validate", tags=["Validation"])
+async def validate_user(usuario: UsuarioValidation) -> Dict[str, Any]:
+    """Validate a user's personal data.
+
+    Required fields:
+        - first_name (string, minimum 2 characters)
+        - last_name (string, minimum 2 characters)
+        - email (string, valid email format)
+
+    Optional fields:
+        - phone (string, digits only, minimum 7 digits)
+        - age (int, between 0 and 120)
     """
     try:
         # Log de la petición
         logger.info(
-            f"Petición POST /validar - Email: {usuario.email}, "
-            f"Nombre: {usuario.nombre}, Apellido: {usuario.apellido}"
+            f"POST /validate - Email: {usuario.email}, "
+            f"First: {usuario.first_name}, Last: {usuario.last_name}"
         )
         
         # Preparar respuesta exitosa
         response = {
-            "valido": True,
-            "mensaje": "Datos validados correctamente",
-            "datos": {
-                "nombre": usuario.nombre,
-                "apellido": usuario.apellido,
+            "valid": True,
+            "message": "Data validated successfully",
+            "data": {
+                "first_name": usuario.first_name,
+                "last_name": usuario.last_name,
                 "email": usuario.email,
-                "telefono": usuario.telefono,
-                "edad": usuario.edad
+                "phone": usuario.phone,
+                "age": usuario.age
             },
             "timestamp": datetime.now().isoformat()
         }
-        
-        logger.info(f"Validación exitosa para: {usuario.email}")
+
+        logger.info(f"Validation successful for: {usuario.email}")
         return response
         
     except ValidationError as e:
-        # Formatea los errores de Pydantic
-        errores_formateados = format_validation_errors(e.errors())
-        
-        logger.warning(f"Error de validación: {json.dumps(errores_formateados)}")
-        
+        errors_formatted = format_validation_errors(e.errors())
+
+        logger.warning(f"Validation error: {json.dumps(errors_formatted)}")
+
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail={
-                "valido": False,
-                "mensaje": "Los datos proporcionados contienen errores de validación",
-                "errores": errores_formateados,
+                "valid": False,
+                "message": "Provided data contains validation errors",
+                "errors": errors_formatted,
                 "timestamp": datetime.now().isoformat()
             }
         )
     
     except Exception as e:
-        logger.error(f"Error inesperado en /validar: {str(e)}")
+        logger.error(f"Unexpected error in /validate: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={
-                "valido": False,
-                "mensaje": "Error interno del servidor",
+                "valid": False,
+                "message": "Internal server error",
                 "error": str(e),
                 "timestamp": datetime.now().isoformat()
             }
@@ -185,20 +160,8 @@ async def validar_usuario(usuario: UsuarioValidacion) -> Dict[str, Any]:
 # ==================== MANEJADOR DE EXCEPCIONES ====================
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
-    """
-    Manejador global de excepciones HTTP.
-    
-    Args:
-        request: Objeto de la petición
-        exc: Excepción HTTP
-        
-    Returns:
-        Respuesta JSON con detalles del error
-    """
-    logger.error(
-        f"Error HTTP {exc.status_code} en {request.method} {request.url.path}: {exc.detail}"
-    )
-    
+    """Global HTTP exception handler."""
+    logger.error(f"HTTP Error {exc.status_code} on {request.method} {request.url.path}: {exc.detail}")
     return JSONResponse(
         status_code=exc.status_code,
         content=exc.detail if isinstance(exc.detail, dict) else {"detail": exc.detail}
@@ -207,25 +170,13 @@ async def http_exception_handler(request, exc):
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
-    """
-    Manejador global de excepciones no manejadas.
-    
-    Args:
-        request: Objeto de la petición
-        exc: Excepción no manejada
-        
-    Returns:
-        Respuesta JSON con error interno
-    """
-    logger.error(
-        f"Excepción no manejada en {request.method} {request.url.path}: {str(exc)}"
-    )
-    
+    """Handler for unhandled exceptions."""
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {str(exc)}")
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
-            "valido": False,
-            "mensaje": "Error interno del servidor",
+            "valid": False,
+            "message": "Internal server error",
             "timestamp": datetime.now().isoformat()
         }
     )
