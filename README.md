@@ -77,101 +77,85 @@ This project is licensed under the MIT License — see the `LICENSE` file for de
 Contributing
 
 Contributions are welcome. Open an issue or a pull request on GitHub.
-# API Validadora de Datos Personales
 
-API REST funcional construida con **FastAPI** y **Python 3.12** para validar datos personales de usuarios con validaciones avanzadas, manejo de errores global, y documentación automática mediante Swagger UI.
+## Personal Data Validator API
 
-## 🚀 Características
+This repository contains a production-ready FastAPI application (Python 3.12) that validates and normalizes personal data fields using Pydantic models and field validators. The project includes automated tests, complete documentation, and examples.
 
-✅ **Validación robusta** con Pydantic  
-✅ **Normalización automática** de nombres y apellidos  
-✅ **Validación de email** con regex  
-✅ **Validación de teléfono** (numérico, mínimo 7 dígitos)  
-✅ **Rango de edad** (0-120 años)  
-✅ **Swagger UI** automático para probar la API  
-✅ **Logging completo** para cada petición  
-✅ **Manejo de errores global** con mensajes claros  
-✅ **Código modular y escalable**  
-✅ **100% funcional y listo para producción**
+## Features
 
----
+- Robust validation with Pydantic
+- Automatic normalization of first and last names (capitalization)
+- Email validation using a dedicated validator
+- Phone validation (digits only, minimum 7 characters)
+- Age validation (integer between 0 and 120)
+- Auto-generated Swagger UI and ReDoc documentation
+- Centralized error handling and structured logging
 
-## 📋 Requisitos
+## Requirements
 
-- Python 3.11+
-- pip o conda
+- Python 3.11 or later
+- pip
 
----
+## Installation
 
-## 🔧 Instalación
-
-### 1. Clonar o descargar el proyecto
+1. Clone the repository and enter the project folder:
 
 ```bash
-cd /home/pantuflitos/Proyectos/API_Validadora
+git clone https://github.com/Pantuflito01/API_Validadora-.git
+cd API_Validadora
 ```
 
-### 2. Crear un entorno virtual (recomendado)
+2. Create and activate a virtual environment (recommended):
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # En Windows: .venv\Scripts\activate
+source .venv/bin/activate
 ```
 
-### 3. Instalar dependencias
+3. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+## Running the API
 
-## ▶️ Ejecutar la API
-
-### Opción 1: Con uvicorn (recomendado)
+Start the application with Uvicorn:
 
 ```bash
-python -m uvicorn main:app --host localhost --port 8000
+uvicorn main:app --host localhost --port 8000
 ```
 
-### Opción 2: Ejecutar directamente
+The API will be available at http://localhost:8000.
 
-```bash
-python main.py
-```
+## API Documentation
 
-La API estará disponible en: **http://localhost:8000**
+Open the interactive API docs at:
 
----
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
-## 📚 Documentación de la API
+## Endpoints
 
-### Endpoints disponibles
+1) `GET /` — API information and metadata
 
-#### 1. **GET /** - Información de la API
+Example response (200):
 
-```http
-GET http://localhost:8000/
-```
-
-**Respuesta exitosa (200):**
 ```json
 {
   "nombre": "API Validadora",
   "version": "1.0.0",
-  "descripcion": "API REST para validar datos personales de usuarios",
+  "descripcion": "Personal data validation REST API",
   "documentacion": "http://localhost:8000/docs",
   "timestamp": "2025-12-11T22:50:31.132924"
 }
 ```
 
-#### 2. **GET /health** - Health Check
+2) `GET /health` — Health check
 
-```http
-GET http://localhost:8000/health
-```
+Example response (200):
 
-**Respuesta exitosa (200):**
 ```json
 {
   "status": "healthy",
@@ -179,24 +163,17 @@ GET http://localhost:8000/health
 }
 ```
 
-#### 3. **POST /validar** - Validar datos personales
+3) `POST /validar` — Validate personal data
 
-```http
-POST http://localhost:8000/validar
-Content-Type: application/json
-```
+Request schema (JSON):
 
-**Esquema de entrada:**
+- `nombre` (string, required): minimum 2 characters
+- `apellido` (string, required): minimum 2 characters
+- `email` (string, required): valid email format
+- `telefono` (string, optional): digits only, minimum 7 digits
+- `edad` (integer, optional): 0-120
 
-| Campo | Tipo | Requerido | Validación |
-|-------|------|-----------|-----------|
-| `nombre` | string | ✅ Sí | Mínimo 2 caracteres |
-| `apellido` | string | ✅ Sí | Mínimo 2 caracteres |
-| `email` | string | ✅ Sí | Formato email válido |
-| `telefono` | string | ❌ No | Numérico, mínimo 7 dígitos |
-| `edad` | int | ❌ No | Rango 0-120 |
-
-**Ejemplo de petición:**
+Example request:
 
 ```bash
 curl -X POST http://localhost:8000/validar \
@@ -210,7 +187,7 @@ curl -X POST http://localhost:8000/validar \
   }'
 ```
 
-**Respuesta exitosa (200):**
+Successful response (200):
 
 ```json
 {
@@ -227,7 +204,7 @@ curl -X POST http://localhost:8000/validar \
 }
 ```
 
-**Ejemplo con error de validación (422):**
+Validation error example (422):
 
 ```bash
 curl -X POST http://localhost:8000/validar \
@@ -235,9 +212,28 @@ curl -X POST http://localhost:8000/validar \
   -d '{
     "nombre": "a",
     "apellido": "perez",
-    "email": "email-inválido"
+    "email": "invalid-email"
   }'
 ```
+
+The server will return a 422 response with details about the failing fields.
+
+## Testing
+
+Run the automated test suite:
+
+```bash
+python test_api.py
+```
+
+## License
+
+This project is licensed under the MIT License — see the `LICENSE` file for details.
+
+## Contributing
+
+Contributions are welcome. Please open an issue or a pull request on GitHub.
+
 
 **Respuesta con error (422):**
 
