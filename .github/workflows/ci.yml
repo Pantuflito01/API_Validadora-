@@ -68,4 +68,14 @@ jobs:
         pip install pytest requests fastapi uvicorn pydantic email-validator
 
     - name: Run tests
-      run: pytest -q
+      run: |
+        # Start the app in background so tests that use HTTP can reach it
+        nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 &
+        # wait for server to start
+        for i in {1..10}; do
+          if curl -sSf http://127.0.0.1:8000/health >/dev/null 2>&1; then
+            break
+          fi
+          sleep 1
+        done
+        pytest -q
